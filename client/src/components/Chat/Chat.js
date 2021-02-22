@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import queryString from 'query-string';
 import io from 'socket.io-client';
 
-var connectionOptions =  {
+const connectionOptions =  {
     "force new connection" : true,
     "reconnectionAttempts": "Infinity", 
     "timeout" : 10000,                  
@@ -18,6 +18,7 @@ var connectionOptions =  {
 // location vem de 'Router'
 
 let socket;
+const ENDPOINT = 'localhost:5000';
 
 const Chat = ( props ) => {
     const [name, setName] = useState('');
@@ -26,18 +27,25 @@ const Chat = ( props ) => {
     const { location } = props;
     // same as: const location = props.location; (from JS)
 
-    const ENDPOINT = 'localhost:5000';
-
     useEffect(() => {
-       const { name, room } = queryString.parse(location.search);
+        const { name, room } = queryString.parse(location.search);
 
-       socket = io.connect(ENDPOINT,connectionOptions);
+        socket = io.connect(ENDPOINT,connectionOptions); 
+        // 'socket' é um objeto. O soquete foi conectado ao cliente.
 
-       setName(name);
-       setRoom(room);
+        setName(name);
+        setRoom(room);
 
-       console.log(socket);
-    });
+        socket.emit('join', { name, room }, () => {
+            
+        });
+
+        return () => {
+            socket.emit('disconnect');
+
+            socket.off();
+        }
+    }, [location.search]);
 
     return (
         <h1>Chat</h1>

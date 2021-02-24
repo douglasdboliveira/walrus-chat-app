@@ -2,6 +2,12 @@ import React, { useState, useEffect } from 'react';
 import queryString from 'query-string';
 import io from 'socket.io-client';
 
+import './Chat.css';
+
+import InfoBar from '../InfoBar/InfoBar';
+import Input from '../Input/Input';
+import Messages from '../Messages/Messages';
+
 const connectionOptions =  {
     "force new connection" : true,
     "reconnectionAttempts": "Infinity", 
@@ -23,6 +29,8 @@ const ENDPOINT = 'localhost:5000';
 const Chat = ( props ) => {
     const [name, setName] = useState('');
     const [room, setRoom] = useState('');
+    const [message, setMessage] = useState('');
+    const [messages, setMessages] = useState([]);
 
     const { location } = props;
     // same as: const location = props.location; (from JS)
@@ -47,8 +55,37 @@ const Chat = ( props ) => {
         }
     }, [location.search]);
 
+    useEffect(() => {
+        socket.on('message', (message) => {
+            setMessages([...messages, message]); 
+            /*
+             * Ex.: 
+             * arr1 = [1, 2, 3];
+             * arr2 = [...arr1, 4, 5];
+             * 
+             * console.log(arr2); => (5) [1, 2, 3, 4, 5]
+             */
+        })
+    }, [messages]);
+
+    const sendMessage = (event) => {
+        event.preventDefault();
+
+        if(message) {
+            socket.emit('sendMessage', message, () => setMessage(''));
+        }
+    }
+
+    console.log(message, messages);
+
     return (
-        <h1>Chat</h1>
+        <div className="outerContainer">
+            <div className="container">
+                <InfoBar room={room}/>
+                <Messages messages={messages} name={name}/>
+                <Input message={message} setMessage={setMessage} sendMessage={sendMessage}/>
+            </div>
+        </div>
     )
 }
 

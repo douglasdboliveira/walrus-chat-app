@@ -27,7 +27,7 @@
     width: 20%;
   }
 
-  #emoji:hover {
+  #emoji-guy:hover {
     transition: transform .2s;
     transform: scale(1.2); 
   }
@@ -36,4 +36,9 @@
     position: absolute;
     top: -325px;
     right: 0;
+  }
+
+  .emoji:hover {
+    transition: transform .2s;
+    transform: scale(1.25); 
   }

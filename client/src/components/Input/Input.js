@@ -21,12 +21,12 @@ const Input = ({ message, setMessage, sendMessage }) => {
                 onClick={() => setShow(false)}   
             />
             <img 
-                id="emoji"
+                id="emoji-guy"
                 src="emoji.png" 
                 alt="Select an emoji" 
                 width="50" 
                 height="50"
-                onClick={() => show ? setShow(false) : setShow(true)}>    
+                onClick={() => setShow(!show)}>    
             </img>
             <div id="emoji-selector">{
                 show ?

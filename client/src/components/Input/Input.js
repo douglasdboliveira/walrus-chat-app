@@ -9,13 +9,27 @@ import './Input.css';
 const Input = ({ message, setMessage, sendMessage }) => {
     const [show, setShow] = useState(false);
 
+    const insertEmoji = (emoji) => {
+        const input = document.getElementById("input");
+
+        const start = input.selectionStart;
+        const end = input.selectionEnd;
+        const value = input.value;
+        const part1 = value.substring(0,start);
+        const part2 = value.substring(end);
+        input.value = part1 + emoji + part2;
+
+        return input.value;
+    }
+
     return (
         <form className="form">
             <input 
+                id="input"
                 className="input"
                 type="text"
                 placeholder="Type a message..."
-                value={message}
+                value={message || ''}
                 onChange={(event) => setMessage(event.target.value)}
                 onKeyPress={event => event.key === 'Enter' ? sendMessage(event) : null}
                 onClick={() => setShow(false)}   
@@ -31,7 +45,7 @@ const Input = ({ message, setMessage, sendMessage }) => {
             <div id="emoji-selector">{
                 show ?
                     <Picker
-                        onEmojiClick={(event, emojiObject) => {setMessage(emojiObject.emoji)}}
+                        onEmojiClick={(event, emojiObject) => {setMessage(insertEmoji(emojiObject.emoji)); setShow(false); }}
                         disableAutoFocus={true}
                         skinTone={SKIN_TONE_MEDIUM_DARK}
                         groupNames={{ smileys_people: "PEOPLE" }}

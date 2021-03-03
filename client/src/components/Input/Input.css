@@ -1,6 +1,7 @@
 .form {
     display: flex;
     border-top: 2px solid #D3D3D3;
+    position: relative;
   }
   
   .input {
@@ -24,4 +25,15 @@
     display: inline-block;
     border: none;
     width: 20%;
+  }
+
+  #emoji:hover {
+    transition: transform .2s;
+    transform: scale(1.2); 
+  }
+
+  #emoji-selector {
+    position: absolute;
+    top: -325px;
+    right: 0;
   }

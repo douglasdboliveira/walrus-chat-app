@@ -25,7 +25,6 @@ const Input = ({ message, setMessage, sendMessage }) => {
         <form className="form">
             <input 
                 ref={inputRef}
-                id="input"
                 className="input"
                 type="text"
                 placeholder="Type a message..."

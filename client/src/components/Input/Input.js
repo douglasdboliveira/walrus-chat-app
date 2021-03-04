@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
 
 import './Input.css';
@@ -8,23 +8,23 @@ import './Input.css';
 
 const Input = ({ message, setMessage, sendMessage }) => {
     const [show, setShow] = useState(false);
+    const inputRef = useRef('');
 
     const insertEmoji = (emoji) => {
-        const input = document.getElementById("input");
-
-        const start = input.selectionStart;
-        const end = input.selectionEnd;
-        const value = input.value;
+        const start = inputRef.current.selectionStart;
+        const end = inputRef.current.selectionEnd;
+        const value = inputRef.current.value;
         const part1 = value.substring(0,start);
         const part2 = value.substring(end);
-        input.value = part1 + emoji + part2;
+        inputRef.current.value = part1 + emoji + part2;
 
-        return input.value;
+        return inputRef.current.value;
     }
 
     return (
         <form className="form">
             <input 
+                ref={inputRef}
                 id="input"
                 className="input"
                 type="text"

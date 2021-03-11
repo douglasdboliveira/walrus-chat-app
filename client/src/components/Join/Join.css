@@ -69,3 +69,14 @@ html, body {
   button:focus {
     outline: 0;
   }
+
+  .dropdown {   
+    border-right: 2px solid rgb(118, 118, 118);
+    border-bottom: 2px solid rgb(133, 133, 133);
+    padding: 5%;
+    width: 100%;
+    height: 47px;
+    font-size: 0.8em;
+    color: #757575;
+    margin-block-start: 1.34em;
+}

@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^12.7.1",
     "emoji-picker-react": "^3.4.2",
     "react": "^17.0.1",
+    "react-css-dropdown": "^1.1.2",
     "react-dom": "^17.0.1",
     "react-emoji": "^0.5.0",
     "react-router-dom": "^5.2.0",

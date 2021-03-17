@@ -13,8 +13,18 @@ const addUser = ({ id, name, room }) => {
     const user = { id, name, room };
 
     users.push(user);
+    // console.log(users);
 
     return { user };
+}
+
+const verifyExistingRoom = (room) => {
+    const user = users.find((user) => user.room === room); 
+    // Se não achar nenhum usuário na mesma sala, retorna undefined
+
+    if(!user) {
+        return room;
+    }
 }
 
 const removeUser = (id) => {
@@ -27,6 +37,4 @@ const removeUser = (id) => {
 
 const getUser = (id) => users.find((user) => user.id === id);
 
-const getUsersInRoom = (room) => users.filter((user) => user.room === room);
-
-module.exports = { addUser, removeUser, getUser, getUsersInRoom };
+module.exports = { addUser, verifyExistingRoom, removeUser, getUser };

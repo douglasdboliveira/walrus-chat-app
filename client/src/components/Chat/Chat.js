@@ -44,7 +44,11 @@ const Chat = ( props ) => {
         setName(name);
         setRoom(room);
 
-        socket.emit('join', { name, room }, () => {});
+        socket.emit('join', { name, room }, (error) => {
+            if(error) {
+                alert(error);
+            }
+        });
 
         return () => {
             socket.emit('disconnect');
@@ -56,6 +60,7 @@ const Chat = ( props ) => {
     useEffect(() => {
         socket.on('message', (message) => {
             setMessages([...messages, message]); 
+
             /*
              * Ex.: 
              * arr1 = [1, 2, 3];
@@ -76,12 +81,18 @@ const Chat = ( props ) => {
 
     // console.log(message, messages);
 
+    const readMessages = () => {
+        socket.emit('readMessages', (response) => {
+            console.log(response);
+        });
+    }
+
     return (
         <div className="outerContainer">
             <div className="container">
                 <InfoBar room={room}/>
-                <Messages messages={messages} name={name}/>
-                <Input message={message} setMessage={setMessage} sendMessage={sendMessage}/>
+                {<Messages messages={messages} name={name}/>}
+                <Input readMessages={readMessages} message={message} setMessage={setMessage} sendMessage={sendMessage}/>
             </div>
         </div>
     )

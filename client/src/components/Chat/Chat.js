@@ -7,6 +7,7 @@ import './Chat.css';
 import InfoBar from '../InfoBar/InfoBar';
 import Input from '../Input/Input';
 import Messages from '../Messages/Messages';
+import Rooms from '../Rooms/Rooms';
 
 const connectionOptions =  {
     "force new connection" : true,
@@ -29,6 +30,7 @@ const ENDPOINT = 'localhost:5000';
 const Chat = ( props ) => {
     const [name, setName] = useState('');
     const [room, setRoom] = useState('');
+    const [rooms, setRooms] = useState([]);
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
 
@@ -37,7 +39,6 @@ const Chat = ( props ) => {
 
     useEffect(() => {
         const { name, room } = queryString.parse(location.search);
-
         socket = io.connect(ENDPOINT,connectionOptions); 
         // 'socket' é um objeto. O soquete foi conectado ao cliente.
 
@@ -50,17 +51,20 @@ const Chat = ( props ) => {
             }
         });
 
-        return () => {
-            socket.emit('disconnect');
+        socket.on('rooms', (rooms) => {
+            setRooms(rooms);
+        });
 
-            socket.off();
+        return () => {
+            setMessages([]);
+            setMessage('');
+            socket.emit('leaveRoom');
         }
     }, [location.search]);
 
     useEffect(() => {
         socket.on('message', (message) => {
             setMessages([...messages, message]); 
-
             /*
              * Ex.: 
              * arr1 = [1, 2, 3];
@@ -89,6 +93,7 @@ const Chat = ( props ) => {
 
     return (
         <div className="outerContainer">
+            <Rooms rooms={rooms} user={name} />
             <div className="container">
                 <InfoBar room={room}/>
                 {<Messages messages={messages} name={name}/>}

@@ -3,7 +3,7 @@ const socketio = require('socket.io');
 const http = require('http');
 
 const { addUser, verifyExistingRoom, removeUser, getUser } = require('./users.js');
-const { addRooms, addMessages, removeRooms, readMessages } = require('./rooms.js');
+const { addRooms, addMessages, removeRooms, readMessages, getRooms } = require('./rooms.js');
 
 const PORT = process.env.PORT || 5000;
 
@@ -23,6 +23,8 @@ io.on('connection', (socket) => {
         const addedRoom = addRooms(room);
         console.log(addedRoom);
 
+        io.emit('rooms', getRooms());
+
         socket.emit('message', { user: 'admin', text: `${user.name}, welcome to the room ${user.room}` }); // Emitir mensagem ao admin
         socket.broadcast.to(user.room).emit('message', { user: 'admin', text: `${user.name} has joined!` }); // Emitir mensagem aos outros usuários
 
@@ -36,15 +38,16 @@ io.on('connection', (socket) => {
         readMessages(user); // Tentar enviar o usuário completo - OK
         // console.log(user.room);
 
-        callback('Voltei!');
+        callback('text read');
     });
 
     socket.on('sendMessage', (message, callback) => {
         const user = getUser(socket.id);
 
+        console.log(user);
+
         io.to(user.room).emit('message', { user: user.name, text: message });
         const rooms = addMessages(message, user.room, user.name); 
-        // Tentar enviar o usuário também - OK
 
         rooms.forEach((room) => {
             console.log(room);
@@ -53,13 +56,18 @@ io.on('connection', (socket) => {
         callback();
     });
 
-    socket.on('disconnect', () => {
-        const user = removeUser(socket.id); // ok      
+    socket.on('leaveRoom', () => {
+        socket.disconnect(true);
+    });
 
-        const searchResult = verifyExistingRoom(user.room); // ok
+    socket.on('disconnect', () => {
+        const user = removeUser(socket.id);
+
+        const searchResult = verifyExistingRoom(user.room);
         // Pra ver se ainda tem usuários na sala
 
-        const deletedRoom = removeRooms(searchResult); // ou o nome da sala, ou undefined
+        const deletedRoom = removeRooms(searchResult); 
+        // ou o nome da sala, ou undefined
 
         console.log(`Deleted room: ${deletedRoom}`);
         // Se nenhuma sala for deletada, vai ser "Deleted room: undefined"

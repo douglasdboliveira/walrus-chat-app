@@ -44,4 +44,6 @@ const readMessages = ({ room, name }) => {
     });
 }
 
-module.exports = { addRooms, addMessages, removeRooms, readMessages };
+const getRooms = () => rooms;
+
+module.exports = { addRooms, addMessages, removeRooms, readMessages, getRooms };

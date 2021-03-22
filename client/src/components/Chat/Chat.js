@@ -33,6 +33,7 @@ const Chat = ( props ) => {
     const [rooms, setRooms] = useState([]);
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
+    const [lastMessages, setLastMessages] = useState([]);
 
     const { location } = props;
     // same as: const location = props.location; (from JS)
@@ -53,6 +54,10 @@ const Chat = ( props ) => {
 
         socket.on('rooms', (rooms) => {
             setRooms(rooms);
+        });
+
+        socket.on('lastMessages', (lastMessages) => {
+            setLastMessages(lastMessages);
         });
 
         return () => {
@@ -93,7 +98,7 @@ const Chat = ( props ) => {
 
     return (
         <div className="outerContainer">
-            <Rooms rooms={rooms} user={name} />
+            <Rooms rooms={rooms} user={name} lastMessages={lastMessages} />
             <div className="container">
                 <InfoBar room={room}/>
                 {<Messages messages={messages} name={name}/>}

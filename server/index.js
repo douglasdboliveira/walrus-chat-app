@@ -3,7 +3,7 @@ const socketio = require('socket.io');
 const http = require('http');
 
 const { addUser, verifyExistingRoom, removeUser, getUser } = require('./users.js');
-const { addRooms, addMessages, removeRooms, readMessages, getRooms } = require('./rooms.js');
+const { addRooms, addMessages, removeRooms, readMessages, getRooms, getLastMessages } = require('./rooms.js');
 
 const PORT = process.env.PORT || 5000;
 
@@ -24,6 +24,7 @@ io.on('connection', (socket) => {
         console.log(addedRoom);
 
         io.emit('rooms', getRooms());
+        io.emit('lastMessages', getLastMessages());
 
         socket.emit('message', { user: 'admin', text: `${user.name}, welcome to the room ${user.room}` }); // Emitir mensagem ao admin
         socket.broadcast.to(user.room).emit('message', { user: 'admin', text: `${user.name} has joined!` }); // Emitir mensagem aos outros usuários
@@ -52,6 +53,8 @@ io.on('connection', (socket) => {
         rooms.forEach((room) => {
             console.log(room);
         })
+        
+        io.emit('lastMessages', getLastMessages());
 
         callback();
     });
@@ -75,6 +78,8 @@ io.on('connection', (socket) => {
         if(user) {
             io.to(user.room).emit('message', { user: 'admin', text: `${user.name} has left.` });
         }
+
+        io.emit('rooms', getRooms());
     })
 })
 

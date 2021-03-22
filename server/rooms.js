@@ -10,8 +10,12 @@ const addRooms = (room) => {
 }
 
 const addMessages = (message, room, user) => {
-    rooms[rooms.indexOf(rooms.find((rooms) => rooms.name === room))].messages.push({message, read: false, sentBy: user});
+    const index = rooms.indexOf(rooms.find((rooms) => rooms.name === room));
+
+    rooms[index].messages.push({ message, read: false, sentBy: user });
     // Adicionar quem enviou a mensagem no array das mensagens
+    const sender = rooms[index].messages[rooms[index].messages.length-1].sentBy;
+    rooms[index].lastMessage = `${sender}: ${message}`;
 
     return rooms;
 }
@@ -46,4 +50,14 @@ const readMessages = ({ room, name }) => {
 
 const getRooms = () => rooms;
 
-module.exports = { addRooms, addMessages, removeRooms, readMessages, getRooms };
+const getLastMessages = () => {
+    const lastMessages = [];
+
+    rooms.forEach((room) => {
+        lastMessages.push(room.lastMessage);
+    })
+
+    return lastMessages;
+}
+
+module.exports = { addRooms, addMessages, removeRooms, readMessages, getRooms, getLastMessages };

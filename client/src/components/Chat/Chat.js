@@ -60,10 +60,12 @@ const Chat = ( props ) => {
             setLastMessages(lastMessages);
         });
 
+        socket.emit('readMessages');
+
         return () => {
             setMessages([]);
             setMessage('');
-            socket.emit('leaveRoom');
+            socket.emit('leaveRoom'); 
         }
     }, [location.search]);
 
@@ -91,9 +93,7 @@ const Chat = ( props ) => {
     // console.log(message, messages);
 
     const readMessages = () => {
-        socket.emit('readMessages', (response) => {
-            console.log(response);
-        });
+        socket.emit('readMessages');
     }
 
     return (

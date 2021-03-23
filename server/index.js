@@ -34,12 +34,9 @@ io.on('connection', (socket) => {
         callback();
     });
 
-    socket.on('readMessages', (callback) => {
+    socket.on('readMessages', () => {
         const user = getUser(socket.id);
         readMessages(user); // Tentar enviar o usuário completo - OK
-        // console.log(user.room);
-
-        callback('text read');
     });
 
     socket.on('sendMessage', (message, callback) => {

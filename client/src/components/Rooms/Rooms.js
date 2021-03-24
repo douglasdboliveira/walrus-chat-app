@@ -3,18 +3,22 @@ import ScrollToBottom from 'react-scroll-to-bottom';
 import { Link } from 'react-router-dom';
 
 import './Rooms.css';
+import ROOMS from '../../rooms';
 
-const Rooms = ({ rooms, user, lastMessages }) => (
-    <div>
-        {rooms.map((room, index) => (
-            <Link key={room.name} to={`/chat?name=${user}&room=${room.name}`}>
-                <div>
-                    <h2>{room.name}</h2>
-                    <h5>{lastMessages[index]}</h5>
-                </div>
-            </Link>
-        ))}
-    </div>
-)
+const Rooms = ({ name, room }) => {
+    const rooms = Object.values(ROOMS);
+
+    return (
+        <div>
+            {rooms.map((room) => (
+                <Link key={room} to={`/chat?name=${name}&room=${room}`} >
+                    <div>
+                        <h2>{room}</h2>
+                    </div>
+                </Link>
+            ))}
+        </div>
+    )
+}
 
 export default Rooms;

@@ -30,55 +30,29 @@ const ENDPOINT = 'localhost:5000';
 const Chat = ( props ) => {
     const [name, setName] = useState('');
     const [room, setRoom] = useState('');
-    const [rooms, setRooms] = useState([]);
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
-    const [lastMessages, setLastMessages] = useState([]);
 
     const { location } = props;
-    // same as: const location = props.location; (from JS)
 
     useEffect(() => {
         const { name, room } = queryString.parse(location.search);
         socket = io.connect(ENDPOINT,connectionOptions); 
-        // 'socket' é um objeto. O soquete foi conectado ao cliente.
 
         setName(name);
         setRoom(room);
 
-        socket.emit('join', { name, room }, (error) => {
-            if(error) {
-                alert(error);
-            }
-        });
-
-        socket.on('rooms', (rooms) => {
-            setRooms(rooms);
-        });
-
-        socket.on('lastMessages', (lastMessages) => {
-            setLastMessages(lastMessages);
-        });
-
-        socket.emit('readMessages');
+        socket.emit('join', { name, room });  
 
         return () => {
             setMessages([]);
-            setMessage('');
-            socket.emit('leaveRoom'); 
+            socket.disconnect(true);
         }
     }, [location.search]);
 
     useEffect(() => {
         socket.on('message', (message) => {
-            setMessages([...messages, message]); 
-            /*
-             * Ex.: 
-             * arr1 = [1, 2, 3];
-             * arr2 = [...arr1, 4, 5];
-             * 
-             * console.log(arr2); => (5) [1, 2, 3, 4, 5]
-             */
+            setMessages([...messages, {...message, read: false, date: new Date() }]); 
         })
     }, [messages]);
 
@@ -86,23 +60,17 @@ const Chat = ( props ) => {
         event.preventDefault();
 
         if(message) {
-            socket.emit('sendMessage', message, () => setMessage(''));
+            socket.emit('sendMessage', name, room, message, () => setMessage(''));
         }
-    }
-
-    // console.log(message, messages);
-
-    const readMessages = () => {
-        socket.emit('readMessages');
     }
 
     return (
         <div className="outerContainer">
-            <Rooms rooms={rooms} user={name} lastMessages={lastMessages} />
+            <Rooms name={name} room={room} />
             <div className="container">
                 <InfoBar room={room}/>
-                {<Messages messages={messages} name={name}/>}
-                <Input readMessages={readMessages} message={message} setMessage={setMessage} sendMessage={sendMessage}/>
+                {<Messages messages={messages.filter((message) => message.room === room)} name={name}/>}
+                <Input message={message} setMessage={setMessage} sendMessage={sendMessage}/>
             </div>
         </div>
     )

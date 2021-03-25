@@ -15,7 +15,60 @@
     height: 60%;
     width: 35%;
   }
-  
+
+  .roomsContainer {
+    position: absolute;
+    left: 0px;
+  }
+
+  .room {
+    border-radius: 10px;
+    background-color: #333333;
+    text-overflow: ellipsis;
+    margin: 5px;
+    padding: 2px;
+    width: 300px;
+    height: 100px;
+    position: relative;
+  }
+
+  .room:hover {
+    background-color: #f37362;
+  }
+
+  .roomName {
+    padding-top: 5px;
+    color: white;
+  }
+
+  .messageTime {
+    color: white;
+    position: absolute;
+    right: 10px;
+    top: 0px;
+  }
+
+  .lastMessage {
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+  }
+
+  .notification {
+    position: absolute;
+    right: 5px;
+    top: 20px;
+    margin-bottom: 10px;
+    padding: 5px 10px;
+    border-radius: 50%;
+    background-color: red;
+    color: white;
+  }
+
+  h5 {
+    color: rgb(216, 216, 216);
+  }
+
   @media (min-width: 320px) and (max-width: 480px) {
     .outerContainer {
       height: 100%;

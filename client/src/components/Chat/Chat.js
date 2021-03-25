@@ -64,11 +64,15 @@ const Chat = ( props ) => {
         }
     }
 
+    const readMessages = (room) => {
+        messages.filter((message) => message.room === room).forEach((message) => message.read = true);
+    }
+
     const changeRoom = (room) => {
         setName(name);
         setRoom(room);
 
-        messages.filter((message) => message.room === room).forEach((message) => message.read = true);
+        readMessages(room);
 
         socket.emit('join', { name, room });
     }
@@ -91,24 +95,25 @@ const Chat = ( props ) => {
         const lastMessage = currentRoomMessages[currentRoomMessages.length-1];
 
         if(lastMessage)
-            return `${lastMessage.user}: ${lastMessage.text}`;
+            return {text: `${lastMessage.user}: ${lastMessage.text}`, time: lastMessage.date.toLocaleTimeString()};
     }
 
     return (
         <div className="outerContainer">
-            <div>
+            <div className="roomsContainer">
                 {rooms.map((roomElement) => (
-                    <div key={roomElement} onClick={() => changeRoom(roomElement)}>
-                        <h2>{roomElement}</h2>
-                        <h5>{roomElement === room ? null : getNotReadMessages(roomElement)}</h5>
-                        <h5>{getLastMessage(roomElement)}</h5>
+                    <div className="room" key={roomElement} onClick={() => changeRoom(roomElement)}>
+                        <h3 className="roomName">{roomElement}</h3>
+                        <h6 className="messageTime">{getLastMessage(roomElement) ? getLastMessage(roomElement).time : null}</h6>
+                        {roomElement === room || !getNotReadMessages(roomElement) ? null : <h5 className="notification">{getNotReadMessages(roomElement)}</h5>}
+                        <h5 className="lastMessage">{getLastMessage(roomElement) ? getLastMessage(roomElement).text : null}</h5>
                     </div>
                 ))}
             </div>
             <div className="container">
                 <InfoBar room={room}/>
                 {<Messages messages={messages.filter((message) => message.room === room)} name={name}/>}
-                <Input message={message} setMessage={setMessage} sendMessage={sendMessage}/>
+                <Input onFocus={() => {readMessages(room)}} message={message} setMessage={setMessage} sendMessage={sendMessage}/>
             </div>
         </div>
     )

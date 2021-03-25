@@ -6,7 +6,7 @@ import './Input.css';
 // a = () => { return 'A'; }
 // outroA = () => ('A');
 
-const Input = ({ message, setMessage, sendMessage }) => {
+const Input = ({ message, setMessage, sendMessage, onFocus }) => {
     const [show, setShow] = useState(false);
     const inputRef = useRef('');
 
@@ -32,6 +32,7 @@ const Input = ({ message, setMessage, sendMessage }) => {
                 onChange={(event) => setMessage(event.target.value)}
                 onKeyPress={event => event.key === 'Enter' ? sendMessage(event) : null}
                 onClick={() => {setShow(false)}}
+                onFocus={onFocus}
             />
             <img 
                 id="emoji-guy"

@@ -7,7 +7,7 @@ import './Chat.css';
 import InfoBar from '../InfoBar/InfoBar';
 import Input from '../Input/Input';
 import Messages from '../Messages/Messages';
-import Rooms from '../Rooms/Rooms';
+import ROOMS from '../../rooms';
 
 const connectionOptions =  {
     "force new connection" : true,
@@ -42,18 +42,18 @@ const Chat = ( props ) => {
         setName(name);
         setRoom(room);
 
-        socket.emit('join', { name, room });  
+        socket.emit('join', { name, room });
 
         return () => {
             setMessages([]);
             socket.disconnect(true);
-        }
-    }, [location.search]);
+        };
+    }, []);
 
     useEffect(() => {
         socket.on('message', (message) => {
-            setMessages([...messages, {...message, read: false, date: new Date() }]); 
-        })
+            setMessages([...messages, {...message, read: false, date: new Date()}]);
+        });
     }, [messages]);
 
     const sendMessage = (event) => {
@@ -64,9 +64,47 @@ const Chat = ( props ) => {
         }
     }
 
+    const changeRoom = (room) => {
+        setName(name);
+        setRoom(room);
+
+        messages.filter((message) => message.room === room).forEach((message) => message.read = true);
+
+        socket.emit('join', { name, room });
+    }
+
+    const rooms = Object.values(ROOMS);
+
+    const findMessages = (room) => {
+        return messages.filter((message) => message.room === room);
+    }
+
+    const getNotReadMessages = (room) => {
+        const messages = findMessages(room);
+        const notRead = messages.filter((message) => message.read === false && message.user !== 'admin').length;
+
+        return notRead;
+    }
+
+    const getLastMessage = (room) => {
+        const currentRoomMessages = findMessages(room);
+        const lastMessage = currentRoomMessages[currentRoomMessages.length-1];
+
+        if(lastMessage)
+            return `${lastMessage.user}: ${lastMessage.text}`;
+    }
+
     return (
         <div className="outerContainer">
-            <Rooms name={name} room={room} />
+            <div>
+                {rooms.map((roomElement) => (
+                    <div key={roomElement} onClick={() => changeRoom(roomElement)}>
+                        <h2>{roomElement}</h2>
+                        <h5>{roomElement === room ? null : getNotReadMessages(roomElement)}</h5>
+                        <h5>{getLastMessage(roomElement)}</h5>
+                    </div>
+                ))}
+            </div>
             <div className="container">
                 <InfoBar room={room}/>
                 {<Messages messages={messages.filter((message) => message.room === room)} name={name}/>}

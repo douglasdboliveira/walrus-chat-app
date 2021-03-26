@@ -38,11 +38,11 @@
 
   .roomName {
     padding-top: 5px;
-    color: white;
+    color: rgb(245, 245, 245);
   }
 
   .messageTime {
-    color: white;
+    color: rgb(245, 245, 245);
     position: absolute;
     right: 10px;
     top: 0px;
@@ -67,6 +67,34 @@
 
   h5 {
     color: rgb(216, 216, 216);
+  }
+
+  .myWalrusApp {
+    color: rgb(216, 216, 216);
+    width: 360px;
+    position: absolute;
+    right: 50px;
+    top: 15em;
+    text-align: right;
+    word-wrap: break-word;
+  }
+
+  .myWalrusContainer {
+    position: absolute;
+    bottom: 5px;
+    right: 70px;
+  }
+
+  .myWalrusLogo {
+    position: absolute;
+    bottom: 18px;
+    right: 80px;
+    width: 28px;
+    height: 32px;
+  }
+
+  .myWalrusName {
+    color: rgb(245, 245, 245);
   }
 
   @media (min-width: 320px) and (max-width: 480px) {

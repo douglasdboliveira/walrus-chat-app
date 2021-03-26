@@ -115,6 +115,14 @@ const Chat = ( props ) => {
                 {<Messages messages={messages.filter((message) => message.room === room)} name={name}/>}
                 <Input onFocus={() => {readMessages(room)}} message={message} setMessage={setMessage} sendMessage={sendMessage}/>
             </div>
+            <div className="myWalrusApp">
+                <h1>My Walrus App &#127858;</h1>
+                <h2><i>My Walrus App</i> delivers a live interactive experience for <em>learning</em> and <em>teaching</em>.</h2>
+            </div>
+            <div className="myWalrusContainer">
+                <img className="myWalrusLogo" src="Logo.png" alt="walrus" />
+                <h2 className="myWalrusName">walrus</h2>
+            </div>
         </div>
     )
 }
